@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import TodoItem from './TodoItem.js'
+import Test from './Test.js'
+import axios from 'axios'
 import './style.css'
 
 // 创建1个组件
@@ -16,7 +18,21 @@ class TodoList extends Component {
     this.handleItemDelete = this.handleItemDelete.bind(this)
   }
 
+  componentWillMount() {
+    console.log('componentWillMount')
+  }
+
+  shouldComponentUpdate() {
+    console.log('shouldComponentUpdate')
+    return true
+  }
+
+  componentWillUpdate() {
+    console.log('componentWillUpdate')
+  }
+
   render() {
+    console.log('parent render')
     return (
       <Fragment>
         <div>
@@ -30,15 +46,35 @@ class TodoList extends Component {
             className='input'
             value={this.state.inputValue}
             onChange={this.handleInputChange}
+            ref={(todoInput) => { this.input = todoInput}}
           />
           <button onClick={this.handleBtnClick}>提交</button>
         </div>
         <ul>
           { this.getTodoItem() }
         </ul>
+        <Test content={this.state.inputValue}></Test>
       </Fragment>
     )
   }
+
+  componentDidMount() {
+    axios.get('/api/todolist').then((res) => {
+      console.log(res.data)
+      this.setState(() => {
+        return {
+          list: [...res.data]
+        }
+      })
+    }).catch(() => {
+      alert('error')
+    })
+  }
+
+  componentDidUpdate() {
+    console.log('componentDidUpdate')
+  }
+
 
   getTodoItem () {
     return this.state.list.map((item, index) => {
@@ -60,15 +96,16 @@ class TodoList extends Component {
       }
     })
   }
-  handleInputChange(e) {
-    const value = e.target.value
+  handleInputChange() {
+    // const value = e.target.value
+    const value = this.input.value
     this.setState(() => { // 使用setState将内容赋值给当前参数
       return {
         inputValue: value
       }
     })
     // this.state.inputValue = e.target.value
-    console.log(this.state.inputValue)
+    // console.log(this.state.inputValue)
   }
 
   handleBtnClick() {

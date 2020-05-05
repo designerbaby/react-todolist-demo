@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TodoList from './TodoList'
+import App from './App.js'
 
-ReactDOM.render(<TodoList />, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById('root'))
 
 // 以下是示例代码，暂时不用到，去除掉
 // import './index.css';
